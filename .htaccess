@@ -1,0 +1,10 @@
+# Deshabilitar la reescritura de URL de Apache
+<IfModule mod_rewrite.c>
+  RewriteEngine off
+</IfModule>
+
+# Deshabilitar la protección de seguimiento de sesión de PHP
+<IfModule mod_php7.c>
+  php_flag session.use_trans_sid off
+</IfModule>
+

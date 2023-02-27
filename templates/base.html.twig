@@ -2,18 +2,43 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+        <title>{% block title %}Aplicación de pedidos{% endblock %}</title>
+        <style>
+            table {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
+            table td, table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            table tr:nth-child(even){background-color: #f2f2f2;}
+
+            table tr:hover {background-color: #ddd;}
+
+            table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #00ABD0;
+                color: white;
+            }
+        </style>
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+            <header>
+                {% block header %}
+                    {{ include('cabecera.html.twig') }}
+                    <hr>
+                {%endblock %}
+            </header>
+            <main>
+                {% block contenido%}{% endblock%}
+            </main>
+        {% endblock %}
     </body>
 </html>

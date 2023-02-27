@@ -1,4 +1,4 @@
-security:
+famisecurity:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -6,7 +6,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        dbsymfony:
+        app_user_provider:
             entity:
                 class: App\Entity\Usuario
                 property: usuario
@@ -18,8 +18,8 @@ security:
            form_login:
                login_path: login
                check_path: login
-               default_target_path: familias
-               provider: dbsymfony
+               default_target_path: cabecera
+               provider: app_user_provider
             #lazy: true
             #custom_authenticator: App\Security\LoginFormAuthenticator
            logout:

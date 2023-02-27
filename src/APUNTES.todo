@@ -1,0 +1,110 @@
+manual : https://symfony.com/doc/current/doctrine.html
+ORM DOCTRINE
+
+de la clase app Controller  en la carpeta controller tiene el método
+entre otros getDoctrine
+
+para que sea sopoertado hay que instalar en el directorio de 
+nuestro proyecto
+composer require symfony/orm-pack
+composer require --dev symfony/maker-bundle
+
+$entityManager = $this->getDoctrine()->getManager();
+$dep = $entityManager->find(“Departamento”, 5);
+$dep->setPresupuesto(10000);
+$entityManager->flush();
+
+para la base de datos hay que ponerlo en el archivo .env
+que está en la ruta del proyecto en primer nivel
+en la línea DATABASE_URL=DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"
+la conexión nuestra
+DATABASE_URL="mysql://root:rootroot@127.0.0.1:3306/dbsymfony?serverVersion=mariadb-10.4.24"
+donde dbsymfony es la base de datos nueva a crear
+y root es usuario con supeerprivilegios y rootroot la password
+para crear una base de datos
+
+php bin/console doctrine:database:create
+
+
+
+para crear una clase (entity) el comando
+php bin/console make:entity
+
+para apartir del entity cree la tabla producto
+php bin/console make:migration
+
+y luego php bin/console doctrine:migrations:migrate
+
+y crea las tablas en la base de datos
+
+
+Luego se crea  un controlador (clase ProductController extends
+        AbstractController) (página 7 de los apuntes)
+donde ManagerRegistry es una inyección del servicio
+
+luego se pueden crear consultas con dql (parecido a sql)
+
+ASOCIACIONES
+
+creamos el objeto familia
+
+y se vuelve a editar la clase producto para añadir Familia
+
+Field type (enter ? to see all types) [string]:
+ > relation
+y el atributo Familia
+
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+
+SEGURIDAD - ENTIDAD USUARIO
+
+Insertar el comando security bundle
+composer require symfony/security-bundle
+
+se crea el objeto usuario
+bin/console make:user
+
+
+para hashear las pass de los usuarios
+php bin/console security:hash-password
+
+FORMULARIO DE LOGIN
+LOGIN - USUARIO Y ADMIN - TRES CONTROLADORES
+make controller para crear la clase controladora
+
+CONTROLADOR DE LOGIN
+php bin/console make:controller Login
+php bin/console make:auth
+php bin/console debug:router (para ver que se ha
+                           creado login y logout)
+
+creamos otro controlador para los usuarios (normalmente
+                se llama como el proyecto y Base
+                ejemplo: PedidosBase )
+php bin/console make:controller IsaBase
+
+falta en el security.yalm en main haría falta la parte
+del login : 
+    form_login:
+	# "login" is the name of the route created previously
+	login_path: login
+	check_path: login
+	default_target_path: ruta_defecto
+    provider: dwes
+/**
+*@IsGranted(*ROLE_ADMIN*)
+*/
+crear controlador PedidosBaseController.php:
+ public function obtenerFamilias(ManagerRegistry $doctrine) : Response {
+    $familias = $doctrine->getRepository(
+
+
+CREAR EN TEMPLATES familias.html.twig
+
+
+resumen comandos
+
+---------------
+
+27/02/2023 controlador anadir

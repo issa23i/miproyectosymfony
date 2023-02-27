@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de familia{% endblock %}
+
+{% block contenido %}
+
+        {% for valor in familias %}
+                <p><a href="{{path('productos',{'id_familia':valor.getId() }) }}">
+        {{valor.getNombre() }}</a></p>
+
+        {% endfor %}
+
+{% endblock %}
