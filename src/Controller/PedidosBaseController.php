@@ -81,6 +81,9 @@ class PedidosBaseController extends AbstractController
     public function obtenerCesta(CestaCompra $cesta): Response {
         $cesta->cargarCesta();
         $carrito = $cesta->getCarrito();
+        $total = $cesta->getTotal();
         
+        return $this->render('cesta/cesta.html.twig'
+                                ,['carrito'=>$carrito, 'total'=>$total]);
     }
 }

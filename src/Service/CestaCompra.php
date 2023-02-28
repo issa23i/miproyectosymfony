@@ -56,8 +56,12 @@ class CestaCompra {
     public function getTotal(){
         $total = 0;
         foreach ($this->carrito as $cod => $prod) {
-            
+            $precio = $prod['producto']->getPrecio();
+            $unidades = $prod['uniades'];
+            $total_producto = $precio * $unidades;
+            $total += $total_producto;
         }
+        return $total;
     }
     
     /**
