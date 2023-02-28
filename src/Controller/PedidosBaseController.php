@@ -63,10 +63,7 @@ class PedidosBaseController extends AbstractController
         $cesta->cambiar_unidades($producto,$unidades);
         $cesta->guardarCesta();
         
-        $this->redirectToRoute('cesta');
-         
-        // TO DO$id_familia = $producto->getFamilia()->getId();
-        //return $this->obtenerProducts($doctrine, $id_familia);
+        return $this->redirectToRoute('cesta');
     }
     
     /**
@@ -83,7 +80,7 @@ class PedidosBaseController extends AbstractController
         $carrito = $cesta->getCarrito();
         $total = $cesta->getTotal();
         
-        return $this->render('cesta/cesta.html.twig'
+        return $this->render('ver_cesta.html.twig'
                                 ,['carrito'=>$carrito, 'total'=>$total]);
     }
 }

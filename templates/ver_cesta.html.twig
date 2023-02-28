@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block contenido %}
+    
+    {% if carrito is empty %}
+        <p>Cesta vacía</p>
+    {% else %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrito %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.producto.precio }}</td>
+                    <td>{{ item.unidades }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td>{{ total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    
+{% endblock %}
