@@ -47,8 +47,8 @@ class CestaCompra {
             if ($unidades_cambiadas < 1) {
                 unset($this->carrito[$cod]);
             } else {
-                $this->carrito[$cod]['unidades'] = $unidades_cambiadas;
-                $this->carrito[$cod]['producto'] = $producto;
+                $this->carrito[$cod_producto]['unidades'] = $unidades_cambiadas;
+                $this->carrito[$cod_producto]['producto'] = $producto;
             }
         }
     }
@@ -57,7 +57,7 @@ class CestaCompra {
         $total = 0;
         foreach ($this->carrito as $cod => $prod) {
             $precio = $prod['producto']->getPrecio();
-            $unidades = $prod['uniades'];
+            $unidades = $prod['unidades'];
             $total_producto = $precio * $unidades;
             $total += $total_producto;
         }

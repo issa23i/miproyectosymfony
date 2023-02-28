@@ -60,8 +60,11 @@ class PedidosBaseController extends AbstractController
         $producto = $doctrine->getRepository(Product::class)->find($producto_id);
         $unidades = $request->request->get('unidades');
         
+        $cesta->cargarCesta();
         $cesta->cambiar_unidades($producto,$unidades);
         $cesta->guardarCesta();
+        var_dump($cesta->getCarrito());
+        $this->addFlash('exito', 'Se ha añadido el producto');
         
         return $this->redirectToRoute('cesta');
     }
@@ -78,6 +81,7 @@ class PedidosBaseController extends AbstractController
     public function obtenerCesta(CestaCompra $cesta): Response {
         $cesta->cargarCesta();
         $carrito = $cesta->getCarrito();
+        // var_dump($carrito); // salida array(0){}
         $total = $cesta->getTotal();
         
         return $this->render('ver_cesta.html.twig'
