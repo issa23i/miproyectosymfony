@@ -2,6 +2,7 @@
 
 namespace App\Service;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Entity\Product;
 /**
  * Description of CESTACOMPRA
  *
@@ -38,16 +39,33 @@ class CestaCompra {
      * @param type $cod
      * @param type $unidades_cambiadas
      */
-    public function cambiar_unidades($cod, $unidades_cambiadas) {
+    public function cambiar_unidades(Product $producto, $unidades_cambiadas) {
+        $cod_producto = $producto->getCod();
         // comprobar que el artículo existe en la cesta
-        if (array_key_exists($cod, $this->carrito)) {
+        if (array_key_exists($cod_producto, $this->carrito)) {
             // si se ha metido un número 0 o negativo, se borran las unidades
             if ($unidades_cambiadas < 1) {
                 unset($this->carrito[$cod]);
             } else {
                 $this->carrito[$cod]['unidades'] = $unidades_cambiadas;
+                $this->carrito[$cod]['producto'] = $producto;
             }
         }
+    }
+    
+    public function getTotal(){
+        $total = 0;
+        foreach ($this->carrito as $cod => $prod) {
+            
+        }
+    }
+    
+    /**
+     * Devuelve el array carrito
+     * @return type $carrito
+     */
+    public function getCarrito(){
+        return $this->carrito;
     }
 }
 

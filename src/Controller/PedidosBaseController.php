@@ -60,7 +60,7 @@ class PedidosBaseController extends AbstractController
         $producto = $doctrine->getRepository(Product::class)->find($producto_id);
         $unidades = $request->request->get('unidades');
         
-        $cesta->cambiar_unidades($producto_id,$unidades);
+        $cesta->cambiar_unidades($producto,$unidades);
         $cesta->guardarCesta();
         
         $this->redirectToRoute('cesta');
@@ -71,10 +71,16 @@ class PedidosBaseController extends AbstractController
     
     /**
      * El controlador cesta recoge los datos de la sesión 
-     *      , la obtiene del servicio y se renderiza
-     *     y se pasan el array y el precio total como parámetros
+     *      , la obtiene del servicio CestaCompra
+     *      que a su vez accede a la sesión con RequestStack
+     *      Finalmente se renderiza pasando el array carrito 
+     *      y el precio total como parámetros
      * 
      * @Route("/cesta", name="cesta")
      */
-    
+    public function obtenerCesta(CestaCompra $cesta): Response {
+        $cesta->cargarCesta();
+        $carrito = $cesta->getCarrito();
+        
+    }
 }
