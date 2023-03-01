@@ -151,25 +151,8 @@ class PedidosBaseController extends AbstractController
                 'error'=>$codigo_error,
             ]);
         }
-        
-        $cesta->borrarCesta();
-        $cesta->guardarCesta();
-        
-        // si no hay error, se pone a null el error
-        return $this->render('pedido.html.twig', [
-            'cod_pedido'=>$cod_pedido,
-            'error'=> null,
-        ]);
-    }
-    
-    /**
-     * 
-     * @param CestaCompra $cesta
-     * @Route("/pedidos", name="pedidos")
-     */
-    public function pedidos(CestaCompra $cesta, Pedido $pedido, ManagerRegistry $doctrine) {
+        /**
         // persistir y flush de la tabla pedidos_productos
-        $em = $doctrine->getManager();
         $carrito = $cesta->getCarrito();
         try {
             
@@ -194,6 +177,28 @@ class PedidosBaseController extends AbstractController
                 'error'=>$codigo_error,
             ]);
         }
+         * */
+        
+        $cesta->borrarCesta();
+        $cesta->guardarCesta();
+        
+        // si no hay error, se pone a null el error
+        return $this->render('pedido.html.twig', [
+            'cod_pedido'=>$cod_pedido,
+            'error'=> null,
+        ]);
+    }
+    
+    /**
+     * 
+     * @param CestaCompra $cesta
+     * @Route("/pedidos", name="pedidos")
+     */
+    public function pedidos(CestaCompra $cesta, ManagerRegistry $doctrine): Response {
+        $pedidos_productos = $doctrine->getRepository(PedidosProductos::class)->findAll();
+        return $this->render('pedidos.html.twig', [
+            'pedidos_productos' => $pedidos_productos,
+        ]);
     }
     
 }

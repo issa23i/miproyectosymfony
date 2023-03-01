@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de familia{% endblock %}
+
+{% block contenido %}
+
+        {% for pp in pedidos_productos %}
+                <p><a href="#">
+        {{pp.getProducto() }}</a></p>
+
+        {% endfor %}
+
+{% endblock %}
