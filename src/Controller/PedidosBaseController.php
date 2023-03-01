@@ -58,13 +58,33 @@ class PedidosBaseController extends AbstractController
     public function anadir(Request $request, ManagerRegistry $doctrine, $producto_id, CestaCompra $cesta ): Response {
         
         $producto = $doctrine->getRepository(Product::class)->find($producto_id);
-        $unidades = $request->request->get('unidades');
+        $unidades = floatval($request->request->get('unidades'));
         
-        $cesta->cargarCesta();
+        // uso del servicio CestaCompra
         $cesta->cambiar_unidades($producto,$unidades);
         $cesta->guardarCesta();
-        var_dump($cesta->getCarrito());
-        $this->addFlash('exito', 'Se ha añadido el producto');
+         // $this->addFlash('exito', 'Se ha añadido el producto');
+         //echo 'estoy en la función añadir';
+        return $this->redirectToRoute('cesta');
+    }
+    
+    /**
+     * Recoge los datos del formulario de eliminar producto (request)
+     * Hace una consulta a la bbdd con el entity manager doctrine
+     * que obtiene el producto y hace uso de eliminar del servicio CestaCompra
+     * guarda la sesión también haciendo uso del servicio CestaCompra
+     * y vuelve a mostrar la cesta
+     * 
+     * @Route("/eliminar/{producto_id}", name="eliminar")
+     */
+    public function eliminar(Request $request, ManagerRegistry $doctrine, $producto_id, CestaCompra $cesta ): Response {
+        
+        $producto = $doctrine->getRepository(Product::class)->find($producto_id);
+        $unidades = floatval($request->request->get('unidades'));
+        
+        // uso del servicio CestaCompra
+        $cesta->eliminar($producto, $unidades);
+        $cesta->guardarCesta();
         
         return $this->redirectToRoute('cesta');
     }
@@ -79,7 +99,7 @@ class PedidosBaseController extends AbstractController
      * @Route("/cesta", name="cesta")
      */
     public function obtenerCesta(CestaCompra $cesta): Response {
-        $cesta->cargarCesta();
+        
         $carrito = $cesta->getCarrito();
         // var_dump($carrito); // salida array(0){}
         $total = $cesta->getTotal();
@@ -87,4 +107,5 @@ class PedidosBaseController extends AbstractController
         return $this->render('ver_cesta.html.twig'
                                 ,['carrito'=>$carrito, 'total'=>$total]);
     }
+    
 }
