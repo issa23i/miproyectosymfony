@@ -10,7 +10,8 @@ use App\Entity\Familia;
 use App\Entity\Product;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\CestaCompra;
-//use App\Entity\Pedido;
+use App\Entity\Usuario;
+use App\Entity\Pedido;
 //use App\Entity\PedidosProductos;
 /**
 *@IsGranted("ROLE_USER")
@@ -101,11 +102,40 @@ class PedidosBaseController extends AbstractController
     public function obtenerCesta(CestaCompra $cesta): Response {
         
         $carrito = $cesta->getCarrito();
-        // var_dump($carrito); // salida array(0){}
         $total = $cesta->getTotal();
         
         return $this->render('ver_cesta.html.twig'
                                 ,['carrito'=>$carrito, 'total'=>$total]);
+    }
+    
+    /**
+     * Obtiene el total con el request y el id del usuario 
+     * Crea un nuevo Pedido y 
+     * @param ManagerRegistry $doctrine
+     * @param CestaCompra $cesta
+     * @return Response
+     * @Route("/pedido", name="pedido")
+     */
+    public function pedido(Request $request, ManagerRegistry $doctrine, CestaCompra $cesta ): Response {
+        $em = $doctrine->getManager();
+        
+        $total = floatval($request->request->get('total'));
+        $usuario = $this->getUser();
+        
+        $pedido = new Pedido;
+        
+        $pedido->setFecha(\DateTime::createFromFormat('Y-m-d', date("Y-m-d")));
+        $pedido->setCoste($total);
+        $pedido->setUsuario($usuario);
+        
+        // guardar o persistir el producto
+        $em->persist($pedido);
+        // enviar la consulta a la bbdd 
+        $em->flush();
+        
+        return $this->render('pedido.html.twig', [
+            'pedido'=>$pedido, 
+        ]);
     }
     
 }
