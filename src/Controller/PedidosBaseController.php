@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\CestaCompra;
 use App\Entity\Usuario;
 use App\Entity\Pedido;
-//use App\Entity\PedidosProductos;
+use App\Entity\PedidosProductos;
 /**
 *@IsGranted("ROLE_USER")
 */
@@ -110,7 +110,9 @@ class PedidosBaseController extends AbstractController
     
     /**
      * Obtiene el total con el request y el id del usuario 
-     * Crea un nuevo Pedido y 
+     * Crea un nuevo Pedido y en el Entity manager, persiste y 
+     * actualiza la base de datos, renderiza tanto si da error
+     * como si se realiza con éxito
      * @param ManagerRegistry $doctrine
      * @param CestaCompra $cesta
      * @return Response
@@ -127,25 +129,71 @@ class PedidosBaseController extends AbstractController
         $pedido->setFecha(\DateTime::createFromFormat('Y-m-d', date("Y-m-d")));
         $pedido->setCoste($total);
         $pedido->setUsuario($usuario);
-        $cod_pedido = $pedido->getId();
+        $cod_pedido;
+        
         
         try {
             // guardar o persistir el producto
             $em->persist($pedido);
             // enviar la consulta a la bbdd 
             $em->flush();
+            // sólo después de enviar el flush se puede 
+            // obtener el id (autoincremento)
+            $cod_pedido = $pedido->getId();
+            
         } catch (Exception $exc) {
+            // si hubo error, obtiene el código del error 
+            // y retorna el renderizado con el código del error
+            // y el código de pedido será null
             $codigo_error = $exc->getCode();
             return $this->render('pedido.html.twig', [
-                'cod_pedido'=>$cod_pedido,
+                'cod_pedido'=>null,
                 'error'=>$codigo_error,
             ]);
         }
-        $mensaje_exito = 'Pedido realizado con éxito';
+        
+        $cesta->borrarCesta();
+        $cesta->guardarCesta();
+        
+        // si no hay error, se pone a null el error
         return $this->render('pedido.html.twig', [
             'cod_pedido'=>$cod_pedido,
             'error'=> null,
         ]);
+    }
+    
+    /**
+     * 
+     * @param CestaCompra $cesta
+     * @Route("/pedidos", name="pedidos")
+     */
+    public function pedidos(CestaCompra $cesta, Pedido $pedido, ManagerRegistry $doctrine) {
+        // persistir y flush de la tabla pedidos_productos
+        $em = $doctrine->getManager();
+        $carrito = $cesta->getCarrito();
+        try {
+            
+            foreach ($carrito as $producto) {
+                $pedido_producto = new PedidosProductos;
+                $pedido_producto->setProducto($producto['producto']);
+                $pedido_producto->setPedido($pedido);
+                $pedido_producto->setUnidades($producto['unidades']);
+                $em->persist($pedido_producto);
+            }
+            
+            $em->flush();
+        } catch (Exception $exc) {
+            // si hubo error, obtiene el código del error 
+            // pone el pedido a null
+            // y retorna el renderizado con el código del error
+            // y el código de pedido será null
+            $codigo_error = $exc->getCode();
+            $pedido->removePedidosProducto($pedido_producto);
+            return $this->render('pedido.html.twig', [
+                'cod_pedido'=>null,
+                'error'=>$codigo_error,
+            ]);
+        }
     }
     
 }

@@ -33,6 +33,10 @@ class CestaCompra {
     public function guardarCesta() {
         $this->sesion->set('cesta', $this->carrito);
     }
+    
+    public function borrarCesta() {
+        $this->carrito = [];
+    }
 
     /**
      * Carga la cesta de la sesión,
