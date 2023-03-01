@@ -3,7 +3,12 @@
 {% block title %}Pedido{% endblock %}
 
 {% block contenido %}
-    
+
+        {% if error is not null %}
+           <p>Pedido número {{ cod_pedido }}  realizado con éxito.</p>
+        {% else %}
+            <p>No se pudo realizar el pedido. Error código {{ error }} </p>
+        {% endif %}
     
     
 {% endblock %}

@@ -127,14 +127,24 @@ class PedidosBaseController extends AbstractController
         $pedido->setFecha(\DateTime::createFromFormat('Y-m-d', date("Y-m-d")));
         $pedido->setCoste($total);
         $pedido->setUsuario($usuario);
+        $cod_pedido = $pedido->getId();
         
-        // guardar o persistir el producto
-        $em->persist($pedido);
-        // enviar la consulta a la bbdd 
-        $em->flush();
-        
+        try {
+            // guardar o persistir el producto
+            $em->persist($pedido);
+            // enviar la consulta a la bbdd 
+            $em->flush();
+        } catch (Exception $exc) {
+            $codigo_error = $exc->getCode();
+            return $this->render('pedido.html.twig', [
+                'cod_pedido'=>$cod_pedido,
+                'error'=>$codigo_error,
+            ]);
+        }
+        $mensaje_exito = 'Pedido realizado con éxito';
         return $this->render('pedido.html.twig', [
-            'pedido'=>$pedido, 
+            'cod_pedido'=>$cod_pedido,
+            'error'=> null,
         ]);
     }
     
