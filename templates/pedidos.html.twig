@@ -4,9 +4,44 @@
 
 {% block contenido %}
 
-        {% for pp in pedidos_productos %}
-                <p><a href="#">
-        {{pp.getProducto() }}</a></p>
+        {% for pedido in pedidos %}
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Num Pedido</th>
+                        <th>Fecha</th>
+                        <th>Productos</th>
+                        <th>Unidades</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ pedido.getId}}</td>
+                        <td >{{ pedido.getFecha()|date('Y-m-d H:i:s') }}</td>
+                        <td ></td>
+                    </tr>
+                    {% for pp in pedido.getPedidosProductos() %}
+                    <tr>
+                        <td colspan="2"></td>
+                        
+                        <td> {{  pp.getProducto().getNombre() }}</td>
+                        <td>{{ pp.getUnidades() }}</td>
+                        <td>{{ pp.getProducto().getPrecio() }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4"><strong>Total</strong></td>
+                        <td><strong>{{ pedido.getCoste() }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        
 
         {% endfor %}
 

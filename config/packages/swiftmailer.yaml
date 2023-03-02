@@ -1,0 +1,9 @@
+# config/packages/swiftmailer.yaml
+swiftmailer:
+    transport: smtp
+    host: 'smtp.gmail.com'
+    port: 587
+    encryption: tls
+    username: 'isabelpastorlopezcv@gmail.com'
+    password: 'ofeplbloumczozbv'
+    spool: { type: memory }

@@ -4,10 +4,16 @@
 
 {% block contenido %}
 
-        {% for valor in familias %}
-                <p><a href="{{path('productos',{'id_familia':valor.getId() }) }}">
-        {{valor.getNombre() }}</a></p>
+    <div class="container">       
+        <ul class="list-group">
+            {% for valor in familias %}
 
-        {% endfor %}
+                <li class="list-group-item">
+                    <a href="{{path('productos',{'id_familia':valor.getId() }) }}">
+                        {{valor.getNombre() }}</a>
+                </li>
 
-{% endblock %}
+
+            {% endfor %}
+        </ul></div> 
+    {% endblock %}
