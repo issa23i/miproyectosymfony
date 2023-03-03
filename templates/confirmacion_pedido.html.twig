@@ -38,29 +38,23 @@
 
 {% block contenido %}
     
-    {% if cesta is empty %}
-        <p>Cesta vacía</p>
-    {% else %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cesta %}
-                <tr>
-                    <td>{{ item.producto.nombre }}</td>
-                    <td>{{ item.producto.precio }}</td>
-                    <td>{{ item.unidades }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-    
+    <p>Pedido número  {{ pedido.getId }}, confirmado</p>
+    <table>
+    <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Unidades</th>
+        <th>Precio</th>
+    </tr>
+    {% for producto in cesta %}
+        <tr>
+            <td>{{ producto.producto.getCod() }}</td>
+            <td>{{ producto.producto.getNombre() }}</td>
+            <td>{{ producto.unidades}}</td>
+            <td>{{ producto.producto.getPrecio() }}€</td>
+        <tr>
+    {% endfor %}
+</table>
 {% endblock %}
             </main>
         {% endblock %}

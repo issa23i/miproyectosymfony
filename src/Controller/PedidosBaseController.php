@@ -181,7 +181,7 @@ class PedidosBaseController extends AbstractController {
                 ->setTo($usuario->getEmail())
                 ->setBody(
                         $this->renderView('confirmacion_pedido.html.twig',
-                                ['cesta' => $cesta]
+                                ['pedido' => $pedido, 'cesta'=>$cesta]
                                 ),
                         'text/html'
                 );
