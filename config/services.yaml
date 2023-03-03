@@ -6,6 +6,9 @@
 parameters:
 
 services:
+    mailer:
+        class: Swift_Mailer
+        arguments: ['@swiftmailer.mailer.default.transport']
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

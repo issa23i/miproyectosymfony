@@ -14,11 +14,18 @@ use App\Service\CestaCompra;
 use App\Entity\Usuario;
 use App\Entity\Pedido;
 use App\Entity\PedidosProductos;
+use Swift_Mailer;
 
 /**
  * @IsGranted("ROLE_USER")
  */
 class PedidosBaseController extends AbstractController {
+    
+    private $mailer;
+    
+    public function __construct(Swift_Mailer $mailer) {
+        $this->mailer = $mailer;
+    }
 
     /**
      * Hace una consulta a la BD mediante Manager Registry inyectado
@@ -167,9 +174,23 @@ class PedidosBaseController extends AbstractController {
         // obtener el id (autoincremento)
         $cod_pedido = $pedido->getId();
 
+
+        // enviar correo electrónico de confirmación
+        $message = (new \Swift_Message('Confirmación de pedido'))
+                ->setFrom('isabelpastorlopezcv@gmail.com')
+                ->setTo($usuario->getEmail())
+                ->setBody(
+                        $this->renderView('confirmacion_pedido.html.twig',
+                                ['cesta' => $cesta]
+                                ),
+                        'text/html'
+                );
+        $this->mailer->send($message);
+        
+        
         $cesta->borrarCesta();
         $cesta->guardarCesta();
-
+        
         // si no hay error, se pone a null el error
         return $this->render('pedido.html.twig', [
                     'cod_pedido' => $cod_pedido,
