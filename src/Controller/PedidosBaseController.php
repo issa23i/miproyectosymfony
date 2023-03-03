@@ -132,7 +132,7 @@ class PedidosBaseController extends AbstractController {
     public function pedido(Request $request, ManagerRegistry $doctrine, CestaCompra $cesta): Response {
         $em = $doctrine->getManager();
 
-        $total = floatval($request->request->get('total'));
+        $total = $cesta->getTotal();
         $usuario = $this->getUser();
 
         $pedido = new Pedido;
